@@ -22,17 +22,32 @@ enum preonic_layers {
   _LOWER,
   _RAISE,
   _ADJUST,
-  _FN
+  _FN,
+  _ROT_MOD
 };
 
 enum preonic_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
-  BACKLIT
+  BACKLIT,
+  SCROLL,
+  VOLUME,
+  WEBTAB,
+  BRIGHTNESS,
+  WORDSCROLL
+};
+
+enum encoder_modes {
+    _SCROLL,
+    _VOLUME,
+    _WEBTAB,
+    _BRIGHTNESS,
+    _WORDSCROLL
 };
 
 #define FN MO(_FN)
+#define ROT_MOD MO(_ROT_MOD)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -46,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Shift |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      | Fn   | Alt  | GUI  |Lower |    Space    |Raise |      |      |      |      |
+ * |RotMod| Fn   | Alt  | GUI  |Lower |    Space    |Raise |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_preonic_grid(
@@ -54,7 +69,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
   CTL_T(KC_ESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
   KC_LSFT,       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-  KC_NO,         FN,      KC_LALT, KC_LGUI, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_NO,   KC_NO,   KC_NO,   KC_NO
+  ROT_MOD,       FN,      KC_LALT, KC_LGUI, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_NO,   KC_NO,   KC_NO,   KC_NO
 ),
 
 /* Lower
@@ -88,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      | C(6) | C(7) | C(8) | C(9) | C(0) | Mute | Vol- | Vol+ | Play | KC_NO|  |   |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      |      |      |      |      |
+ * |      |RotMod|      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_preonic_grid(
@@ -96,7 +111,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_GRV,   KC_1,        KC_2,        KC_3,        KC_4,        KC_5,        KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     _______,
     _______,  LCTL(KC_1),  LCTL(KC_2),  LCTL(KC_3),  LCTL(KC_4),  LCTL(KC_5),  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RGHT,  KC_NO,    KC_QUOT,
     _______,  LCTL(KC_6),  LCTL(KC_7),  LCTL(KC_8),  LCTL(KC_9),  LCTL(KC_0),  KC_MUTE,  KC_VOLD,  KC_VOLU,  KC_MPLY,  KC_NO,    KC_BSLS,
-    _______,  _______,     _______,     _______,     _______,     _______,     _______,  _______,  _______,  _______,  _______,  _______
+    _______,  ROT_MOD,     _______,     _______,     _______,     _______,     _______,  _______,  _______,  _______,  _______,  _______
 ),
 
 /* Adjust (Lower + Raise)
@@ -130,7 +145,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      |      |      |      |      |
+ * |      |      |      |      |      |             |RotMod|      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_FN] = LAYOUT_ortho_5x12(
@@ -138,9 +153,34 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_F1,  KC_F2,    KC_F3,  KC_F4,   KC_F5,   KC_F6,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_LBRC,
     KC_F7,  KC_F8,    KC_F9,  KC_F10,  KC_F11,  KC_F12,  KC_HOME,  KC_PGDN,  KC_PGUP,  KC_END,  KC_SCLN,  KC_QUOT,
     KC_NO,  KC_NO,    KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,
-    KC_NO,  KC_TRNS,  KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO
+    KC_NO,  KC_TRNS,  KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,    ROT_MOD,  KC_NO,    KC_NO,   KC_NO,    KC_NO
+),
+
+/* ROT_MOD
+ * ,-----------------------------------------------------------------------------------.
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |Words |      | Tabs |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |Scroll|      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |      |      |      |Volume|Bright|      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |             |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_ROT_MOD] = LAYOUT_ortho_5x12(
+    KC_NO,  KC_NO,    KC_NO,      KC_NO,   KC_NO,   KC_NO,      KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,
+    KC_NO,  KC_NO,    WORDSCROLL, KC_NO,   KC_NO,   WEBTAB,     KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,
+    KC_NO,  KC_NO,    SCROLL,     KC_NO,   KC_NO,   KC_NO,      KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,
+    KC_NO,  KC_NO,    KC_NO,      KC_NO,   VOLUME,  BRIGHTNESS, KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,
+    KC_NO,  KC_NO,    KC_NO,      KC_NO,   KC_NO,   KC_NO,      KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO
 )
 };
+
+
+// Default encoder mode
+uint8_t encoder_mode = _SCROLL;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -181,6 +221,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           }
           return false;
           break;
+        case SCROLL:
+          encoder_mode = _SCROLL;
+          return false;
+          break;
+        case VOLUME:
+          encoder_mode = _VOLUME;
+          return false;
+          break;
+        case WEBTAB:
+          encoder_mode = _WEBTAB;
+          return false;
+          break;
+        case BRIGHTNESS:
+          encoder_mode = _BRIGHTNESS;
+          return false;
+          break;
+        case WORDSCROLL:
+          encoder_mode = _WORDSCROLL;
+          return false;
+          break;
       }
     return true;
 };
@@ -207,12 +267,49 @@ void encoder_update_user(uint8_t index, bool clockwise) {
       }
     }
   } else {
-    if (clockwise) {
-      register_code(KC_PGDN);
-      unregister_code(KC_PGDN);
-    } else {
-      register_code(KC_PGUP);
-      unregister_code(KC_PGUP);
+    // Make switch case:
+    switch (encoder_mode) {
+    case _SCROLL:
+      if (clockwise) {
+        tap_code(KC_PGDN);
+      } else {
+        tap_code(KC_PGUP);
+      }
+      break;
+    case _VOLUME:
+      if (clockwise) {
+        tap_code(KC_VOLD);
+      } else {
+        tap_code(KC_VOLU);
+      }
+      break;
+    case _WEBTAB:
+      register_code(KC_LCTL);
+      if (clockwise) {
+        register_code(KC_LSFT);
+        tap_code(KC_TAB);
+        unregister_code(KC_LSFT);
+      } else {
+        tap_code(KC_TAB);
+      }
+      unregister_code(KC_LCTL);
+      break;
+    case _WORDSCROLL:
+      register_code(KC_LCTL);
+      if (clockwise) {
+        tap_code(KC_LEFT);
+      } else {
+        tap_code(KC_RIGHT);
+      }
+      unregister_code(KC_LCTL);
+      break;
+    case _BRIGHTNESS:
+      if (clockwise) {
+        tap_code(KC_BRIGHTNESS_DOWN);
+      } else {
+        tap_code(KC_BRIGHTNESS_UP);
+      }
+      break;
     }
   }
 }
