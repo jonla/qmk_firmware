@@ -24,7 +24,8 @@ enum planck_layers {
   _RAISE,
   _PLOVER,
   _ADJUST,
-  _FN
+  _FN,
+  _GAME
 };
 
 enum planck_keycodes {
@@ -39,6 +40,7 @@ enum planck_keycodes {
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 #define FN MO(_FN)
+#define GAME_TG TG(_GAME)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -103,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * | Caps |      |MUSmod|Aud on|Audoff|AGnorm|AGswap|      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |Voice-|Voice+|Mus on|Musoff|MIDIon|MIDIof|TermOn|TermOf|      |      |      |
+ * |      |Voice-|Voice+|Mus on|Musoff|MIDIon|MIDIof|TermOn|TermOf|      |      |NumLck|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
@@ -111,7 +113,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_ADJUST] = LAYOUT_planck_grid(
     _______, RESET,   DEBUG,   RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD,  RGB_VAI, RGB_VAD, KC_DEL ,
     KC_CAPS, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, _______,  _______, _______, _______,
-    _______, MUV_DE,  MUV_IN,  MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  TERM_ON, TERM_OFF, _______, _______, _______,
+    _______, MUV_DE,  MUV_IN,  MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  TERM_ON, TERM_OFF, _______, _______, KC_NUMLOCK,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______
 ),
 
@@ -121,16 +123,34 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 | Home | PgDn | PgUp | End  |  ;   |   '  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |GameTG|      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_FN] = LAYOUT_ortho_4x12(
-    KC_F1,  KC_F2,    KC_F3,  KC_F4,   KC_F5,   KC_F6,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_LBRC,
-    KC_F7,  KC_F8,    KC_F9,  KC_F10,  KC_F11,  KC_F12,  KC_HOME,  KC_PGDN,  KC_PGUP,  KC_END,  KC_SCLN,  KC_QUOT,
-    KC_NO,  KC_NO,    KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,
-    KC_NO,  _______,  KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO
+    KC_F1,  KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_LBRC,
+    KC_F7,  KC_F8,    KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_HOME,  KC_PGDN,  KC_PGUP,  KC_END,  KC_SCLN,  KC_QUOT,
+    KC_NO,  KC_NO,    GAME_TG, KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,
+    KC_NO,  _______,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO
+),
+
+/* Game mode
+ * ,-----------------------------------------------------------------------------------.
+ * | Esc  |   7  |   8  |   9  |  F6  |  F7  |   Y  |   U  |   I  |   O  |   P  | Bksp |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Ctrl |   4  |   2  |   6  |  F8  |  F9  |   H  |   J  |   K  |   L  |   ;  |Enter |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * | Shift|   1  |   X  |   3  |  F10 |  F11 |   N  |   M  |   ,  |   .  |   /  |Shift |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |RotMod| Fn   | Alt  | GUI  |Lower |     F12     |Raise |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_GAME] = LAYOUT_planck_grid(
+  KC_ESC,    KC_P7,   KC_P8,   KC_P9,   KC_F6,   KC_F7,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+  KC_LCTL,   KC_P4,   KC_P2,   KC_P6,   KC_F8,   KC_F9,   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
+  KC_LSFT,   KC_P1,   KC_TRNS, KC_P3,   KC_F10,  KC_F11,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+  KC_NO,     FN,      KC_LALT, KC_LGUI, LOWER,   KC_F12,  KC_F12,  RAISE,   KC_NO,   KC_NO,   KC_NO,   KC_NO
 )
 };
 
